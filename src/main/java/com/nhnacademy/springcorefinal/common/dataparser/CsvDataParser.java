@@ -38,7 +38,7 @@ public class CsvDataParser implements DataParser{
             while ((nextLine = reader.readNext()) != null) {
 
                 accounts.add(
-                        new Account( Long.parseLong(nextLine[0]), nextLine[1], nextLine[2])
+                        new Account( Long.parseLong(nextLine[0] ), nextLine[1].trim(), nextLine[2].trim())
                 );
 
             }
@@ -60,8 +60,11 @@ public class CsvDataParser implements DataParser{
             reader.readNext(); // 헤더 스킵
             while ((nextLine = reader.readNext()) != null) {
 
-                if(sectorList.contains(nextLine[2]))
-                sectorList.add(nextLine[2]);
+                // 지자체명이 일치하고, 겹치지 않는 업종 저장
+                if(nextLine[1].trim().equals(city) && !sectorList.contains(nextLine[2].trim())){
+                    sectorList.add(nextLine[2].trim());
+
+                }
 
             }
         } catch (IOException e) {
@@ -70,15 +73,33 @@ public class CsvDataParser implements DataParser{
             throw new RuntimeException(e);
         }
 
-        return accounts;
 
-        return List.of();
+        return sectorList;
     }
 
     @Override
     public List<String> cities() {
+        List<String> cityList = new ArrayList<>();
 
-        return List.of();
+        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
+            String[] nextLine;
+            reader.readNext(); // 헤더 스킵
+            while ((nextLine = reader.readNext()) != null) {
+
+                // 겹치지 않게 지자체명 저장
+                if(!cityList.contains(nextLine[1].trim())){
+                    cityList.add(nextLine[1].trim());
+                }
+
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return cityList;
     }
 
 }

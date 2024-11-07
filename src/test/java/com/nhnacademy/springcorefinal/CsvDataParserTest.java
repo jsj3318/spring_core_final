@@ -31,11 +31,13 @@ class CsvDataParserTest {
 
     @Test
     void price() {
+        
     }
 
     @Test
     void accounts() {
         List<Account> accountList = csvDataParser.accounts();
+
         for(Account account : accountList){
             log.info(account.toString());
         }
@@ -45,9 +47,27 @@ class CsvDataParserTest {
 
     @Test
     void sectors() {
+        List<String> sectorList = csvDataParser.sectors("동두천시");
+        for(String sector : sectorList){
+            log.info(sector);
+        }
+        log.info("sectorList size: {}", sectorList.size());
+
+        assertEquals(true, sectorList.containsAll(List.of(new String[]{
+                "가정용", "일반용", "일반용(미)", "전용공업용", "발전용"
+        })));
     }
 
     @Test
     void cities() {
+        List<String> cityList = csvDataParser.cities();
+
+        for(String city : cityList){
+            log.info(city);
+        }
+
+        assertEquals(true, cityList.containsAll(
+                List.of(new String[]{"동두천시", "파주시", "광주시", "나주시", "완도군", "사천시"})
+        ));
     }
 }

@@ -5,10 +5,8 @@ import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -41,6 +38,8 @@ public class CsvDataParser implements DataParser{
 
     // 생성자에서 accountlist, pricelist 받아오기
     public CsvDataParser(FileProperties fileProperties) {
+
+        log.info("csv로 파일 로딩");
 
         this.fileProperties = fileProperties;
 
@@ -119,6 +118,7 @@ public class CsvDataParser implements DataParser{
             }
 
         }
+
 
         return null;
     }

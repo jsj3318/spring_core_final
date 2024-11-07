@@ -1,16 +1,11 @@
-package com.nhnacademy.springcorefinal;
+package com.nhnacademy.springcorefinal.common.dataparser;
 
 import com.nhnacademy.springcorefinal.account.dto.Account;
-import com.nhnacademy.springcorefinal.common.dataparser.CsvDataParser;
 import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 

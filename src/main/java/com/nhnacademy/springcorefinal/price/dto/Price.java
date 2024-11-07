@@ -1,13 +1,17 @@
 package com.nhnacademy.springcorefinal.price.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Price {
     @JsonProperty("순번")
     private long id;
@@ -17,7 +21,7 @@ public class Price {
     private String sector;
     @JsonProperty("단계")
     private int grade;
-    @JsonProperty("구간시작(세제곱미터")
+    @JsonProperty("구간시작(세제곱미터)")
     private int unitStart;
     @JsonProperty("구간끝(세제곱미터)")
     private int unitEnd;
@@ -26,16 +30,7 @@ public class Price {
     @JsonProperty("단계별 기본요금(원)")
     private String gradePrice;
 
-    public Price(long id, String city, String sector, int grade, int unitStart, int unitEnd, int unitPrice, String gradePrice) {
-        this.id = id;
-        this.city = city;
-        this.sector = sector;
-        this.grade = grade;
-        this.unitStart = unitStart;
-        this.unitEnd = unitEnd;
-        this.unitPrice = unitPrice;
-        this.gradePrice = gradePrice;
-    }
+
 
     @Override
     public String toString() {

@@ -4,6 +4,7 @@ import com.nhnacademy.springcorefinal.account.dto.Account;
 import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,21 +20,19 @@ class CsvDataParserTest {
 
     CsvDataParser csvDataParser = new CsvDataParser(fileProperties);
 
+
     @BeforeEach
     void before(){
-        csvDataParser.setStr_city("지자체명");
-        csvDataParser.setStr_sector("업종");
-        csvDataParser.setStr_unit("구간금액(원)");
-        csvDataParser.setStr_total("총금액(원)");
+        csvDataParser.post();
     }
 
     @Test
     void price() {
-        Price price = csvDataParser.price("광주시", "가정용");
+        List<Price> prices = csvDataParser.price("광주시", "가정용");
 
-        log.info(price.toString());
+        log.info(prices.toString());
 
-        assertEquals(400, price.getUnitPrice());
+        assertEquals(3, prices.size());
     }
 
     @Test
@@ -73,12 +72,6 @@ class CsvDataParserTest {
         ));
     }
 
-    @Test
-    void billTotal() {
-        String actual = csvDataParser.billTotal("광주시", "일반용", 200);
-        String expected = "지자체명: 광주시, 업종: 일반용, 구간금액(원): 1250, 총금액(원): " + (1250 * 200);
-        assertEquals(expected, actual);
-    }
 
 
 }

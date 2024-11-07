@@ -21,19 +21,16 @@ class JsonDataParserTest {
 
     @BeforeEach
     void before(){
-        jsonDataParser.setStr_city("지자체명");
-        jsonDataParser.setStr_sector("업종");
-        jsonDataParser.setStr_unit("구간금액(원)");
-        jsonDataParser.setStr_total("총금액(원)");
+        jsonDataParser.post();
     }
 
     @Test
     void price() {
-        Price price = jsonDataParser.price("광주시", "가정용");
+        List<Price> prices = jsonDataParser.price("광주시", "가정용");
 
-        log.info(price.toString());
+        log.info(prices.toString());
 
-        assertEquals(400, price.getUnitPrice());
+        assertEquals(3, prices.size());
     }
 
     @Test
@@ -73,11 +70,6 @@ class JsonDataParserTest {
         ));
     }
 
-    @Test
-    void billTotal() {
-        String actual = jsonDataParser.billTotal("광주시", "일반용", 200);
-        String expected = "지자체명: 광주시, 업종: 일반용, 구간금액(원): 1250, 총금액(원): " + (1250 * 200);
-        assertEquals(expected, actual);
-    }
+
 
 }

@@ -30,15 +30,6 @@ public class JsonDataParser implements DataParser{
     @Autowired
     private final FileProperties fileProperties;
 
-    @Value("${bill-total.city}")
-    private String str_city;
-    @Value("${bill-total.sector}")
-    private String str_sector;
-    @Value("${bill-total.unitPrice}")
-    private String str_unit;
-    @Value("${bill-total.billTotal}")
-    private String str_total;
-
     private List<Account> accountList;
     private List<Price> priceList;
 
@@ -65,16 +56,17 @@ public class JsonDataParser implements DataParser{
     }
 
     @Override
-    public Price price(String city, String sector) {
+    public List<Price> price(String city, String sector) {
+        List<Price> res = new ArrayList<>();
 
         for(Price price : priceList){
             if(price.getCity().equals(city) && price.getSector().equals(sector)){
-                return price;
+                res.add(price);
             }
 
         }
 
-        return null;
+        return res;
     }
 
     @Override
@@ -108,20 +100,4 @@ public class JsonDataParser implements DataParser{
         return cityList;
     }
 
-    @Override
-    public String billTotal(String city, String sector, int usage) {
-        for(Price price : priceList){
-            // 시티, 업종, 사용량으로 검색
-            if( price.getCity().equals(city) && price.getSector().equals(sector) &&
-                    usage >= price.getUnitStart() && usage <= price.getUnitEnd() ){
-                return  str_city + ": " + price.getCity() + ", " +
-                        str_sector + ": " + price.getSector() + ", " +
-                        str_unit + ": " + price.getUnitPrice() + ", " +
-                        str_total + ": " + (price.getUnitPrice() * usage);
-
-            }
-        }
-
-        return "일치하는 정보를 찾을 수 없습니다.";
-    }
 }

@@ -1,9 +1,12 @@
 package com.nhnacademy.springcorefinal.price.formatter;
 
+import com.nhnacademy.springcorefinal.account.dto.Account;
 import com.nhnacademy.springcorefinal.price.dto.Price;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -20,6 +23,48 @@ public class EnglishOutputFormatter implements OutPutFormatter{
                 ", sector: " + price.getSector() +
                 ", unit price(won): " + price.getUnitPrice() +
                 ", bill total(won): " + (usage * price.getUnitPrice());
+    }
+
+    @Override
+    public String login(Account account) {
+        // 로그인 정보 일치하지 않음
+        if(account == null){
+            return "id or password not correct";
+        }
+
+        return String.format("Login Success! [Account: id=%d, password:%s, name=%s]",
+                account.getId(), account.getPassword(), account.getName());
+    }
+
+    @Override
+    public String logout() {
+        return "good bye~!";
+    }
+
+    @Override
+    public String currentUser(Account account) {
+        if(account == null){
+            return "You must login first.";
+        }
+        return String.format("Account[id=%d, password:%s, name=%s]",
+                account.getId(), account.getPassword(), account.getName() );
+    }
+
+    @Override
+    public String price(List<Price> priceList) {
+        // 내용이 존재하지 않는다
+        if(priceList.isEmpty()){
+            return "No price data.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for(Price price : priceList){
+            sb.append(price.toString());
+            sb.append(System.lineSeparator());
+        }
+
+        return sb.toString();
     }
 
 }

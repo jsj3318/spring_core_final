@@ -31,14 +31,17 @@ public class Price {
     private String gradePrice;
 
 
-
     @Override
     public String toString() {
         return "Price{" +
                 "id=" + id +
                 ", city='" + city + '\'' +
                 ", sector='" + sector + '\'' +
+                ", grade=" + grade +
+                ", unitStart=" + unitStart +
+                ", unitEnd=" + unitEnd +
                 ", unitPrice=" + unitPrice +
+                ", gradePrice='" + gradePrice + '\'' +
                 '}';
     }
 

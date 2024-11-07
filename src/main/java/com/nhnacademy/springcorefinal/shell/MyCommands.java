@@ -1,44 +1,61 @@
 package com.nhnacademy.springcorefinal.shell;
 
+import com.nhnacademy.springcorefinal.account.dto.Account;
+import com.nhnacademy.springcorefinal.account.service.AuthenticationService;
+import com.nhnacademy.springcorefinal.price.formatter.OutPutFormatter;
+import com.nhnacademy.springcorefinal.price.service.PriceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 @ShellComponent
+@RequiredArgsConstructor
 public class MyCommands {
+    private final AuthenticationService authenticationService;
+    private final PriceService priceService;
+    private final OutPutFormatter outPutFormatter;
 
-    @ShellMethod
+
+    @ShellMethod()
     public String login(long id, String password) {
-        return null;
+        // 입력 받은 정보로 로그인 시도
+        Account account = authenticationService.login(id, password);
+
+        return outPutFormatter.login(account);
+
     }
 
     @ShellMethod
     public String logout() {
-        return null;
+        authenticationService.logout();
+        return outPutFormatter.logout();
     }
 
     @ShellMethod
     public String currentUser() {
-        return null;
+        return outPutFormatter.currentUser(authenticationService.getCurrentAccount());
     }
 
     @ShellMethod
     public String city() {
-        return null;
+        // [광주시, 나주시]
+        return "[" + String.join(", ", priceService.cities()) + "]";
     }
 
     @ShellMethod
     public String sector(String city) {
-        return null;
+        // [가정용, 일반용]
+        return "[" + String.join(", ", priceService.sectors(city)) + "]";
     }
 
     @ShellMethod
     public String price(String city, String sector) {
-        return null;
+        return outPutFormatter.price(priceService.price(city, sector));
     }
 
     @ShellMethod
     public String billTotal(String city, String sector, int usage) {
-        return null;
+        return priceService.billTotal(city, sector, usage);
     }
 
 }

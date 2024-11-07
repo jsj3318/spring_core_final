@@ -23,6 +23,7 @@ public class AuthenticationService {
         // 로그인: 계정 목록에서 id와 암호가 일치하는 계정 정보를 찾아서 반환한다.
         for(Account account : dataParser.accounts()){
             if(account.getId() == id && account.getPassword().equals(password)){
+                currentAccount = account;
                 return account;
             }
         }

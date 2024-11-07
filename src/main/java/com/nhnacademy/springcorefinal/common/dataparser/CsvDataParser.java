@@ -80,7 +80,7 @@ public class CsvDataParser implements DataParser{
             throw new RuntimeException(e);
         }
     }
-    
+
 
 
     @Override
@@ -107,7 +107,7 @@ public class CsvDataParser implements DataParser{
         List<String> sectorList = new ArrayList<>();
 
         for(Price price : priceList){
-            if(!sectorList.contains(price.getSector())){
+            if(price.getCity().equals(city) && !sectorList.contains(price.getSector())){
                 sectorList.add(price.getSector());
             }
         }

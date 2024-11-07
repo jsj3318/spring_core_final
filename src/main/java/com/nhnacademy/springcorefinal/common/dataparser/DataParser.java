@@ -19,4 +19,7 @@ public interface DataParser {
     // 도시 리스트 반환
     List<String> cities();
 
+    // 시티, 섹터, 사용량으로 요금 까지 출력
+    String billTotal(String city, String sector, int usage);
+
 }

@@ -8,18 +8,21 @@ import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Setter
-@RequiredArgsConstructor
 @Component
+@ConditionalOnProperty(name="file.type", havingValue = "csv")
 public class CsvDataParser implements DataParser{
 
     private final FileProperties fileProperties;
@@ -33,70 +36,26 @@ public class CsvDataParser implements DataParser{
     @Value("${bill-total.billTotal}")
     private String str_total;
 
-    @Override
-    public String billTotal(String city, String sector, int usage) {
-        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
-            String[] nextLine;
-            reader.readNext(); // 헤더 스킵
-            while ((nextLine = reader.readNext()) != null) {
+    private List<Account> accountList = new ArrayList<>();
+    private List<Price> priceList = new ArrayList<>();
 
-                // 시티, 업종, 사용량으로 검색
-                if(nextLine[1].trim().equals(city) && nextLine[2].trim().equals(sector)
-                    && usage >= Integer.parseInt(nextLine[4]) && usage <= Integer.parseInt(nextLine[5]) ){
+    // 생성자에서 accountlist, pricelist 받아오기
+    public CsvDataParser(FileProperties fileProperties) {
 
-                    return  str_city + ": " + nextLine[1].trim() + ", " +
-                            str_sector + ": " + nextLine[2].trim() + ", " +
-                            str_unit + ": " + nextLine[6].trim() + ", " +
-                            str_total + ": " + (Integer.parseInt(nextLine[6]) * usage);
+        this.fileProperties = fileProperties;
 
-                }
-
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return "일치하는 정보를 찾을 수 없습니다.";
-    }
-
-    @Override
-    public Price price(String city, String sector) {
-
-        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
-            String[] nextLine;
-            reader.readNext(); // 헤더 스킵
-            while ((nextLine = reader.readNext()) != null) {
-
-                if(nextLine[1].trim().equals(city) && nextLine[2].trim().equals(sector)){
-                    return new Price(
-                            Long.parseLong(nextLine[0]),
-                            nextLine[1].trim(),
-                            nextLine[2].trim(),
-                            Integer.parseInt(nextLine[6])
-                    );
-                }
-
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<Account> accounts() {
-        List<Account> accounts = new ArrayList<>();
-
+        // accountList
         try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getAccountPath())))) {
             String[] nextLine;
             reader.readNext(); // 헤더 스킵
             while ((nextLine = reader.readNext()) != null) {
 
-                accounts.add(
-                        new Account( Long.parseLong(nextLine[0] ), nextLine[1].trim(), nextLine[2].trim())
+                accountList.add(
+                        new Account(
+                                Long.parseLong(nextLine[0]),
+                                nextLine[1].trim(),
+                                nextLine[2].trim()
+                        )
                 );
 
             }
@@ -106,23 +65,23 @@ public class CsvDataParser implements DataParser{
             throw new RuntimeException(e);
         }
 
-        return accounts;
-    }
-
-    @Override
-    public List<String> sectors(String city) {
-        List<String> sectorList = new ArrayList<>();
-
+        // priceList
         try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
             String[] nextLine;
             reader.readNext(); // 헤더 스킵
             while ((nextLine = reader.readNext()) != null) {
-
-                // 지자체명이 일치하고, 겹치지 않는 업종 저장
-                if(nextLine[1].trim().equals(city) && !sectorList.contains(nextLine[2].trim())){
-                    sectorList.add(nextLine[2].trim());
-
-                }
+                priceList.add(
+                        new Price(
+                                Long.parseLong(nextLine[0]),
+                                nextLine[1].trim(),
+                                nextLine[2].trim(),
+                                Integer.parseInt(nextLine[3]),
+                                Integer.parseInt(nextLine[4]),
+                                Integer.parseInt(nextLine[5]),
+                                Integer.parseInt(nextLine[6]),
+                                nextLine[7].trim()
+                                )
+                );
 
             }
         } catch (IOException e) {
@@ -131,6 +90,53 @@ public class CsvDataParser implements DataParser{
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public String billTotal(String city, String sector, int usage) {
+
+        for(Price price : priceList){
+            // 시티, 업종, 사용량으로 검색
+            if( price.getCity().equals(city) && price.getSector().equals(sector) &&
+                usage >= price.getUnitStart() && usage <= price.getUnitEnd() ){
+                return  str_city + ": " + price.getCity() + ", " +
+                        str_sector + ": " + price.getSector() + ", " +
+                        str_unit + ": " + price.getUnitPrice() + ", " +
+                        str_total + ": " + (price.getUnitPrice() * usage);
+
+            }
+        }
+
+        return "일치하는 정보를 찾을 수 없습니다.";
+    }
+
+    @Override
+    public Price price(String city, String sector) {
+
+        for(Price price : priceList){
+            if(price.getCity().equals(city) && price.getSector().equals(sector)){
+                return price;
+            }
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Account> accounts() {
+        return accountList;
+    }
+
+    @Override
+    public List<String> sectors(String city) {
+        List<String> sectorList = new ArrayList<>();
+
+        for(Price price : priceList){
+            if(!sectorList.contains(price.getSector())){
+                sectorList.add(price.getSector());
+            }
+        }
 
         return sectorList;
     }
@@ -139,23 +145,11 @@ public class CsvDataParser implements DataParser{
     public List<String> cities() {
         List<String> cityList = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
-            String[] nextLine;
-            reader.readNext(); // 헤더 스킵
-            while ((nextLine = reader.readNext()) != null) {
-
-                // 겹치지 않게 지자체명 저장
-                if(!cityList.contains(nextLine[1].trim())){
-                    cityList.add(nextLine[1].trim());
-                }
-
+        for(Price price : priceList){
+            if(!cityList.contains(price.getCity())){
+                cityList.add(price.getCity());
             }
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
         }
-
 
         return cityList;
     }

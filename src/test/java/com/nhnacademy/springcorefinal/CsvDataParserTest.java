@@ -17,19 +17,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@ExtendWith(MockitoExtension.class)
 class CsvDataParserTest {
 
 
-    FileProperties fileProperties = new FileProperties();
+    FileProperties fileProperties = new FileProperties("csv", "Tariff.csv", "account.csv");
 
     CsvDataParser csvDataParser = new CsvDataParser(fileProperties);
 
     @BeforeEach
     void before(){
-        fileProperties.setType("csv");
-        fileProperties.setAccountPath("account.csv");
-        fileProperties.setPricePath("Tariff.csv");
         csvDataParser.setStr_city("지자체명");
         csvDataParser.setStr_sector("업종");
         csvDataParser.setStr_unit("구간금액(원)");

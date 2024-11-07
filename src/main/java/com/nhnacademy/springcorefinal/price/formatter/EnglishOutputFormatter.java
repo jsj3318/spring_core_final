@@ -8,10 +8,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Profile("!kor")
-public class EnglishOutputFormatter {
+public class EnglishOutputFormatter implements OutPutFormatter{
 
+    public EnglishOutputFormatter() {
+        log.info("english format selected.");
+    }
+
+    @Override
     public String format(Price price, int usage) {
-        return null;
+        return "city: " + price.getCity() +
+                ", sector: " + price.getSector() +
+                ", unit price(won): " + price.getUnitPrice() +
+                ", bill total(won): " + (usage * price.getUnitPrice());
     }
 
 }

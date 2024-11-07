@@ -10,10 +10,16 @@ import org.springframework.stereotype.Component;
 @Profile("kor")
 public class KoreanOutputFormatter implements OutPutFormatter{
 
+    public KoreanOutputFormatter() {
+        log.info("한국어 포맷 선택 됨.");
+    }
 
     @Override
     public String format(Price price, int usage) {
-        return "";
+        return "지자체명: " + price.getCity() +
+                ", 업종: " + price.getSector() +
+                ", 구간금액(원): " + price.getUnitPrice() +
+                ", 총금액(원): " + (usage * price.getUnitPrice());
     }
 
 }

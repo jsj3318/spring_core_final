@@ -7,12 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
+@SpringBootTest(properties = {
+        "spring.shell.interactive.enabled=false"
+})
 class CsvDataParserTest {
 
 

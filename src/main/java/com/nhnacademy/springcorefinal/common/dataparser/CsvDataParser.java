@@ -5,6 +5,8 @@ import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ import java.util.List;
 @Slf4j
 @Setter
 @Component
+@RequiredArgsConstructor
 @ConditionalOnProperty(name="file.type", havingValue = "csv")
 public class CsvDataParser implements DataParser{
 
@@ -36,12 +39,9 @@ public class CsvDataParser implements DataParser{
     private List<Account> accountList = new ArrayList<>();
     private List<Price> priceList = new ArrayList<>();
 
-    // 생성자에서 accountlist, pricelist 받아오기
-    public CsvDataParser(FileProperties fileProperties) {
-
-        log.info("csv로 파일 로딩");
-
-        this.fileProperties = fileProperties;
+    @PostConstruct
+    public void post(){
+        log.info("csv 파일 로딩");
 
         // accountList
         try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getAccountPath())))) {
@@ -79,7 +79,7 @@ public class CsvDataParser implements DataParser{
                                 Integer.parseInt(nextLine[5]),
                                 Integer.parseInt(nextLine[6]),
                                 nextLine[7].trim()
-                                )
+                        )
                 );
 
             }
@@ -88,8 +88,8 @@ public class CsvDataParser implements DataParser{
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
         }
-
     }
+
 
     @Override
     public String billTotal(String city, String sector, int usage) {

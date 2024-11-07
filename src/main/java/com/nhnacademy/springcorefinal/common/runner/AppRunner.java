@@ -18,6 +18,6 @@ public class AppRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
 
-        log.info(dataParser.price("광주시", "일반용").toString());
+        log.info(dataParser.billTotal("광주시", "일반용", 200));
     }
 }

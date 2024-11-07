@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.springcorefinal.account.dto.Account;
 import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.List;
 @Slf4j
 @Setter
 @Component
+@RequiredArgsConstructor
 @ConditionalOnProperty(name="file.type", havingValue = "json")
 public class JsonDataParser implements DataParser{
 
@@ -40,14 +42,11 @@ public class JsonDataParser implements DataParser{
     private List<Account> accountList;
     private List<Price> priceList;
 
-    public JsonDataParser(FileProperties fileProperties) {
-
-        log.info("json으로 파일 로딩");
-
-        this.fileProperties = fileProperties;
+    @PostConstruct
+    public void post(){
+        log.info("json 파일 로딩");
 
         ObjectMapper objectMapper = new ObjectMapper();
-
 
         try {
             // account 불러오기
@@ -63,12 +62,10 @@ public class JsonDataParser implements DataParser{
             throw new RuntimeException(e);
         }
 
-
     }
 
     @Override
     public Price price(String city, String sector) {
-
 
         for(Price price : priceList){
             if(price.getCity().equals(city) && price.getSector().equals(sector)){
@@ -76,7 +73,6 @@ public class JsonDataParser implements DataParser{
             }
 
         }
-
 
         return null;
     }

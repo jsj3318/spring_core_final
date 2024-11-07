@@ -16,7 +16,7 @@ public class MyCommands {
     private final OutPutFormatter outPutFormatter;
 
 
-    @ShellMethod()
+    @ShellMethod(value = "id password")
     public String login(long id, String password) {
         // 입력 받은 정보로 로그인 시도
         Account account = authenticationService.login(id, password);
@@ -42,18 +42,18 @@ public class MyCommands {
         return "[" + String.join(", ", priceService.cities()) + "]";
     }
 
-    @ShellMethod
+    @ShellMethod(value="city")
     public String sector(String city) {
         // [가정용, 일반용]
         return "[" + String.join(", ", priceService.sectors(city)) + "]";
     }
 
-    @ShellMethod
+    @ShellMethod(value="city sector")
     public String price(String city, String sector) {
         return outPutFormatter.price(priceService.price(city, sector));
     }
 
-    @ShellMethod
+    @ShellMethod(value="city sector usage")
     public String billTotal(String city, String sector, int usage) {
         return priceService.billTotal(city, sector, usage);
     }

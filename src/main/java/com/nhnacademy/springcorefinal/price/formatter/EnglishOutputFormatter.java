@@ -29,7 +29,7 @@ public class EnglishOutputFormatter implements OutPutFormatter{
     public String login(Account account) {
         // 로그인 정보 일치하지 않음
         if(account == null){
-            return "id or password not correct";
+            throw new IllegalArgumentException("id or password not correct");
         }
 
         return String.format("Login Success! [Account: id=%d, password:%s, name=%s]",

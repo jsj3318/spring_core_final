@@ -29,7 +29,7 @@ public class KoreanOutputFormatter implements OutPutFormatter{
     public String login(Account account) {
         // 로그인 정보 일치하지 않음
         if(account == null){
-            return "아이디 또는 패스워드가 일치하지 않아요";
+            throw new IllegalArgumentException("아이디 또는 패스워드가 일치하지 않네요.");
         }
 
         return String.format("로그인 성공! [계정 정보: 아이디=%d, 패스워드:%s, 이름=%s]",

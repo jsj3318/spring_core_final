@@ -7,11 +7,16 @@ import java.util.List;
 
 public interface DataParser {
 
+    // 시티와 섹터를 넣고 price 객체 반환
     Price price(String city, String sector);
 
+    // 계정 리스트 반환
     List<Account> accounts();
 
+    // 섹터 리스트 반환
     List<String> sectors(String city);
 
+    // 도시 리스트 반환
     List<String> cities();
+
 }

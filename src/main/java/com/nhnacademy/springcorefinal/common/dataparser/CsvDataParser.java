@@ -1,32 +1,84 @@
 package com.nhnacademy.springcorefinal.common.dataparser;
 
 import com.nhnacademy.springcorefinal.account.dto.Account;
+import com.nhnacademy.springcorefinal.common.properties.FileProperties;
 import com.nhnacademy.springcorefinal.price.dto.Price;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class CsvDataParser implements DataParser{
 
-public class CsvDataParser {
+    private final FileProperties fileProperties;
 
-    // 도시 리스트 반환
-    public List<String> cities() {
-        return null;
-    }
 
-    // 섹터 리스트 반환
-    public List<String> sectors(String city) {
-        return null;
-    }
-
-    // 시티와 섹터를 넣고 price 객체 반환
+    @Override
     public Price price(String city, String sector) {
+
         return null;
     }
 
-    // 계정 리스트 반환
+    @Override
     public List<Account> accounts() {
-        return null;
+        List<Account> accounts = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getAccountPath())))) {
+            String[] nextLine;
+            reader.readNext(); // 헤더 스킵
+            while ((nextLine = reader.readNext()) != null) {
+
+                accounts.add(
+                        new Account( Long.parseLong(nextLine[0]), nextLine[1], nextLine[2])
+                );
+
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
+        return accounts;
     }
 
+    @Override
+    public List<String> sectors(String city) {
+        List<String> sectorList = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileProperties.getPricePath())))) {
+            String[] nextLine;
+            reader.readNext(); // 헤더 스킵
+            while ((nextLine = reader.readNext()) != null) {
+
+                if(sectorList.contains(nextLine[2]))
+                sectorList.add(nextLine[2]);
+
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
+        return accounts;
+
+        return List.of();
+    }
+
+    @Override
+    public List<String> cities() {
+
+        return List.of();
+    }
 
 }

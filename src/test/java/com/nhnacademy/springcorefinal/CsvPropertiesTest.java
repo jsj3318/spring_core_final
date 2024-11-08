@@ -40,8 +40,8 @@ public class CsvPropertiesTest {
         authenticationService.login(1L, "1");
         Account account = authenticationService.getCurrentAccount();
         assertEquals("선도형", account.getName());
-    }
 
+    }
     @Test
     void logoutTest() throws Exception {
         authenticationService.login(1L, "1");

@@ -13,6 +13,11 @@ import java.util.List;
 @Profile("kor")
 public class KoreanOutputFormatter implements OutPutFormatter{
 
+    @Override
+    public String noData() {
+        return "해당되는 데이터가 존재하지 않습니다.";
+    }
+
     public KoreanOutputFormatter() {
         log.info("한국어 포맷 선택 됨.");
     }
@@ -23,6 +28,11 @@ public class KoreanOutputFormatter implements OutPutFormatter{
                 ", 업종: " + price.getSector() +
                 ", 구간금액(원): " + price.getUnitPrice() +
                 ", 총금액(원): " + (usage * price.getUnitPrice());
+    }
+
+    @Override
+    public String wrongUsage() {
+        return "입력 값이 범위를 벗어났습니다";
     }
 
     @Override
@@ -37,9 +47,15 @@ public class KoreanOutputFormatter implements OutPutFormatter{
     }
 
     @Override
+    public String alreadyLogin() {
+        throw new RuntimeException("이미 로그인 되어 있습니다.");
+    }
+
+    @Override
     public String logout() {
         return "잘가요..";
     }
+
 
     @Override
     public String currentUser(Account account) {
@@ -52,10 +68,6 @@ public class KoreanOutputFormatter implements OutPutFormatter{
 
     @Override
     public String price(List<Price> priceList) {
-        // 내용이 존재하지 않는다
-        if(priceList.isEmpty()){
-            return "데이터가 존재하지 않습니다.";
-        }
 
         StringBuilder sb = new StringBuilder();
 

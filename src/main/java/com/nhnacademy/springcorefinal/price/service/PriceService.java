@@ -30,17 +30,24 @@ public class PriceService {
 
     public String billTotal(String city, String sector, int usage) {
         // city, sector에 일치하는 price들 중에서 맞는 구간을 선택하고, usage * unit
+        //dataParser.price 호출 시 일치하는 price들만 반환 해 줌
+        List<Price> priceList = dataParser.price(city, sector);
 
-        for(Price price : dataParser.price(city, sector)){
-            if(price.getCity().equals(city) && price.getSector().equals(sector) &&
-                    usage >= price.getUnitStart() && usage <= price.getUnitEnd() ) {
+        // 존재하지 않는 city, sector
+        if(priceList.isEmpty()){
+            return outPutFormatter.noData();
+        }
+
+        for(Price price : priceList){
+            if( usage >= price.getUnitStart() && usage <= price.getUnitEnd() ) {
 
                 return outPutFormatter.format(price, usage);
 
             }
         }
 
-        return "일치하는 정보를 찾을 수 없습니다.";
+        return outPutFormatter.wrongUsage();
+
     }
 
 }

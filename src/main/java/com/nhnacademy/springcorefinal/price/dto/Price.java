@@ -41,7 +41,6 @@ public class Price {
                 ", unitStart=" + unitStart +
                 ", unitEnd=" + unitEnd +
                 ", unitPrice=" + unitPrice +
-                ", gradePrice='" + gradePrice + '\'' +
                 '}';
     }
 
@@ -50,11 +49,11 @@ public class Price {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Price price = (Price) o;
-        return id == price.id && grade == price.grade && unitStart == price.unitStart && unitEnd == price.unitEnd && unitPrice == price.unitPrice && Objects.equals(city, price.city) && Objects.equals(sector, price.sector) && Objects.equals(gradePrice, price.gradePrice);
+        return id == price.id && grade == price.grade && unitStart == price.unitStart && unitEnd == price.unitEnd && unitPrice == price.unitPrice && Objects.equals(city, price.city) && Objects.equals(sector, price.sector);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, city, sector, grade, unitStart, unitEnd, unitPrice, gradePrice);
+        return Objects.hash(id, city, sector, grade, unitStart, unitEnd, unitPrice);
     }
 }

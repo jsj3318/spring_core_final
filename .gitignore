@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### log ###
+price.log
+spring-core-final.log
+account.log

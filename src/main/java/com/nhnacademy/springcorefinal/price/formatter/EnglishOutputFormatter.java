@@ -13,6 +13,16 @@ import java.util.List;
 @Profile("!kor")
 public class EnglishOutputFormatter implements OutPutFormatter{
 
+    @Override
+    public String noData() {
+        return "there is no data.";
+    }
+
+    @Override
+    public String wrongUsage() {
+        return "usage out of range.";
+    }
+
     public EnglishOutputFormatter() {
         log.info("english format selected.");
     }
@@ -37,6 +47,11 @@ public class EnglishOutputFormatter implements OutPutFormatter{
     }
 
     @Override
+    public String alreadyLogin() {
+        throw new RuntimeException("You are already login");
+    }
+
+    @Override
     public String logout() {
         return "good bye~!";
     }
@@ -52,10 +67,6 @@ public class EnglishOutputFormatter implements OutPutFormatter{
 
     @Override
     public String price(List<Price> priceList) {
-        // 내용이 존재하지 않는다
-        if(priceList.isEmpty()){
-            return "No price data.";
-        }
 
         StringBuilder sb = new StringBuilder();
 

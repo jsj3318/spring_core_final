@@ -10,8 +10,17 @@ public interface OutPutFormatter {
     // bill-total
     String format(Price price, int usage);
 
+    // no city / sector
+    String noData();
+
+    // bill-total usage 범위 나감
+    String wrongUsage();
+
     // login
     String login(Account account);
+
+    // already login
+    String alreadyLogin();
 
     // logout
     String logout();

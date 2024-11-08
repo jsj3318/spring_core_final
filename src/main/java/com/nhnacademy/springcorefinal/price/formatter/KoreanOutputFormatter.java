@@ -15,7 +15,7 @@ public class KoreanOutputFormatter implements OutPutFormatter{
 
     @Override
     public String noData() {
-        return "해당되는 데이터가 존재하지 않습니다.";
+        throw new IllegalArgumentException("해당되는 데이터가 존재하지 않습니다.");
     }
 
     public KoreanOutputFormatter() {
@@ -32,7 +32,7 @@ public class KoreanOutputFormatter implements OutPutFormatter{
 
     @Override
     public String wrongUsage() {
-        return "입력 값이 범위를 벗어났습니다";
+        throw new IllegalArgumentException("입력 값이 범위를 벗어났습니다");
     }
 
     @Override

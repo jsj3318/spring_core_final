@@ -15,12 +15,12 @@ public class EnglishOutputFormatter implements OutPutFormatter{
 
     @Override
     public String noData() {
-        return "there is no data.";
+        throw new IllegalArgumentException("there is no data.");
     }
 
     @Override
     public String wrongUsage() {
-        return "usage out of range.";
+        throw new IllegalArgumentException("usage out of range.");
     }
 
     public EnglishOutputFormatter() {
